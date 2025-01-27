@@ -28,6 +28,18 @@
   color: #61dafb;
 }
 
+/* Make sure this container takes up full height */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensure full height to push footer to the bottom */
+}
+
+/* The content should grow and push footer down */
+.content {
+  flex-grow: 1; /* Makes the content section take available space */
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
