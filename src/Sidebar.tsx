@@ -33,18 +33,70 @@ const Sidebar: React.FC<SidebarProps> = ({ position, isOpen, onClose }) => {
       const response = await fetch("/menuData.json"); // Adjust path as needed
       const data: MenuItem[] = await response.json();
       setMenuData(data);
+
+      // Initialize openSubmenus state for all menu items and their submenus
+      const initializeSubmenus = (
+        data: MenuItem[],
+        parentIndex: string = ""
+      ) => {
+        const newSubmenusState = new Map(openSubmenus);
+
+        data.forEach((item, index) => {
+          const key = `${parentIndex}${index}`;
+          newSubmenusState.set(key, false); // Initialize parent menu as collapsed
+
+          if (item.submenus) {
+            item.submenus.forEach((subItem, subIndex) => {
+              const subKey = `${key}-${subIndex}`;
+              newSubmenusState.set(subKey, false); // Initialize submenu as collapsed
+              if (subItem.submenus) {
+                initializeSubmenus(subItem.submenus, `${subKey}-`); // Recursively initialize submenus
+              }
+            });
+          }
+        });
+
+        setOpenSubmenus(newSubmenusState);
+      };
+
+      initializeSubmenus(data);
     };
 
     fetchMenuData();
   }, []);
 
-  // Toggle visibility of submenus
+  // Toggle visibility of submenus, and collapse child items when parent is collapsed
   const toggleSubmenu = (parentIndex: string, submenuIndex: string) => {
     setOpenSubmenus((prev) => {
       const newSet = new Map(prev);
       const key = `${parentIndex}-${submenuIndex}`;
-      newSet.set(key, !newSet.get(key)); // Toggle the visibility of the submenu
+      const currentState = newSet.get(key);
+
+      console.log(`Toggling submenu: ${key}, current state: ${currentState}`);
+
+      // Toggle the visibility of the submenu: if it's true (open), set it to false (closed), and vice versa
+      newSet.set(key, !currentState); // Toggle the submenu state
+
+      // If a parent item is collapsed, collapse all of its submenus and child submenus recursively
+      if (currentState) {
+        // Collapse the current item and all its child submenus recursively
+        collapseAllChildren(newSet, key);
+      }
+
       return newSet;
+    });
+  };
+
+  // Helper function to recursively collapse all children and submenus
+  const collapseAllChildren = (
+    submenusState: Map<string, boolean>,
+    parentIndex: string
+  ) => {
+    submenusState.forEach((value, key) => {
+      // Collapse all submenus under the parent index
+      if (key.startsWith(parentIndex)) {
+        submenusState.set(key, false); // Collapse the submenu
+      }
     });
   };
 
@@ -60,6 +112,8 @@ const Sidebar: React.FC<SidebarProps> = ({ position, isOpen, onClose }) => {
       <ul className={`submenu submenu-level-${level}`}>
         {submenus.map((submenu, subIndex) => {
           const index = `${parentIndex}-${subIndex}`; // Unique key for each submenu item
+
+          const isOpen = openSubmenus.get(index); // Get the current open state of the submenu
 
           return (
             <li key={index}>
@@ -83,7 +137,7 @@ const Sidebar: React.FC<SidebarProps> = ({ position, isOpen, onClose }) => {
               </a>
               {submenu.submenus &&
                 submenu.submenus.length > 0 &&
-                openSubmenus.has(index) &&
+                isOpen &&
                 renderSubmenus(
                   submenu.submenus,
                   level + 1,
@@ -107,37 +161,42 @@ const Sidebar: React.FC<SidebarProps> = ({ position, isOpen, onClose }) => {
       </button>
       <h2>{position === "left" ? "Left Sidebar" : "Right Sidebar"}</h2>
       <ul>
-        {menuData.map((item, index) => (
-          <li key={index}>
-            <a
-              href={item.link}
-              className="menu-item"
-              style={{ fontSize: "14px" }} // Main menu items have font size of 14px
-              onClick={(e) => {
-                e.preventDefault(); // Prevent page reload on link click
-                toggleSubmenu("root", index.toString()); // Toggle visibility of top-level submenu
-              }}
-            >
-              {item.name}
-              {item.submenus && item.submenus.length > 0 && (
-                <img
-                  src={RightArrow}
-                  alt="Right Arrow"
-                  className="submenu-arrow"
-                />
-              )}
-            </a>
-            {item.submenus &&
-              item.submenus.length > 0 &&
-              openSubmenus.has(`root-${index}`) &&
-              renderSubmenus(
-                item.submenus,
-                1,
-                `root-${index}`
-              ) // Render submenus for this menu item
-            }
-          </li>
-        ))}
+        {menuData.map((item, index) => {
+          const itemIndex = `root-${index}`;
+          const isOpen = openSubmenus.get(itemIndex); // Get the current open state of the menu item
+
+          return (
+            <li key={index}>
+              <a
+                href={item.link}
+                className="menu-item"
+                style={{ fontSize: "14px" }} // Main menu items have font size of 14px
+                onClick={(e) => {
+                  e.preventDefault(); // Prevent page reload on link click
+                  toggleSubmenu("root", index.toString()); // Toggle visibility of top-level submenu
+                }}
+              >
+                {item.name}
+                {item.submenus && item.submenus.length > 0 && (
+                  <img
+                    src={RightArrow}
+                    alt="Right Arrow"
+                    className="submenu-arrow"
+                  />
+                )}
+              </a>
+              {item.submenus &&
+                item.submenus.length > 0 &&
+                isOpen &&
+                renderSubmenus(
+                  item.submenus,
+                  1,
+                  itemIndex
+                ) // Render submenus for this menu item
+              }
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
