@@ -1,0 +1,46 @@
+[
+  {
+    "name": "Menu Item 1",
+    "link": "#",
+    "submenus": [
+      {
+        "name": "Submenu 1.1",
+        "link": "#",
+        "submenus": [
+          {
+            "name": "Submenu 1.1.1",
+            "link": "#"
+          },
+          {
+            "name": "Submenu 1.1.2",
+            "link": "#"
+          }
+        ]
+      },
+      {
+        "name": "Submenu 1.2",
+        "link": "#"
+      }
+    ]
+  },
+  {
+    "name": "Menu Item 2",
+    "link": "#",
+    "submenus": [
+      {
+        "name": "Submenu 2.1",
+        "link": "#",
+        "submenus": [
+          {
+            "name": "Submenu 2.1.1",
+            "link": "#"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Menu Item 3",
+    "link": "#"
+  }
+]

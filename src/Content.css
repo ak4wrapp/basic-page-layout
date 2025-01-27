@@ -1,0 +1,5 @@
+/* Content styles */
+.content {
+  padding: 20px;
+  margin-top: 60px; /* Ensure content is not hidden behind header */
+}

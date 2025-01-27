@@ -1,0 +1,89 @@
+/* Sidebar styles */
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 250px;
+  background-color: #333;
+  color: white;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  padding: 20px;
+  z-index: 100;
+}
+
+.left-sidebar {
+  left: 0;
+}
+
+.right-sidebar {
+  right: 0;
+  transform: translateX(100%);
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
+.sidebar h2 {
+  color: #fff;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.menu-item {
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 0;
+  display: block;
+  font-size: 14px; /* Main menu items have font size of 14px */
+  cursor: pointer;
+}
+
+.menu-item:hover {
+  background-color: #444;
+}
+
+/* Add a little space between the menu item text and the arrow */
+.submenu-arrow {
+  width: 12px;
+  height: 12px;
+  margin-left: 5px;
+  vertical-align: middle; /* Ensures the arrow aligns with the text */
+  transition: transform 0.3s ease;
+}
+
+/* Submenu styles */
+.submenu {
+  list-style: none;
+  padding-left: 20px;
+  margin: 0;
+  display: block;
+}
+
+.submenu-item {
+  color: #bbb;
+  text-decoration: none;
+  padding: 5px 0;
+  display: block;
+}
+
+.submenu-item:hover {
+  background-color: #555;
+}
+
+/* Different levels of submenus */
+.submenu-level-1 {
+  padding-left: 20px;
+}
+
+.submenu-level-2 {
+  padding-left: 40px;
+}
+
+.submenu-level-3 {
+  padding-left: 60px;
+}
