@@ -4,16 +4,20 @@
     "link": "#",
     "submenus": [
       {
-        "name": "Submenu 1.1",
+        "name": "Feature-App",
         "link": "#",
         "submenus": [
           {
-            "name": "Submenu 1.1.1",
-            "link": "#"
+            "name": "User",
+            "link": "/remote/user"
           },
           {
-            "name": "Submenu 1.1.2",
-            "link": "#"
+            "name": "Admin",
+            "link": "/remote/admin"
+          },
+          {
+            "name": "Invalid",
+            "link": "/remote/invalid"
           }
         ]
       },

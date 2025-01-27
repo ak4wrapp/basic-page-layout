@@ -1,50 +1,27 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-/* Make sure this container takes up full height */
+/* Ensure the app container takes full height of the screen */
 .app-container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Ensure full height to push footer to the bottom */
+  min-height: 100vh; /* Ensures the container takes at least the full screen height */
 }
 
-/* The content should grow and push footer down */
-.content {
-  flex-grow: 1; /* Makes the content section take available space */
+/* The content wrapper should grow to take available space */
+.content-wrapper {
+  flex-grow: 1; /* This allows content-wrapper to take up all available space */
+  padding: 80px 40px 40px 300px;
+  overflow-y: auto; /* Enables scrolling if content overflows */
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Footer at the bottom */
+footer {
+  background-color: #282c34;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  margin-top: auto; /* This makes sure the footer is pushed down */
+}
+
+footer p {
+  margin: 0;
+  font-size: 14px;
 }

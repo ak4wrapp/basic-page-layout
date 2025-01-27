@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom"; // Import Link
 import "./sidebar.css";
 import RightArrow from "./right-arrow.svg"; // Import the SVG right arrow
 
@@ -26,6 +27,7 @@ const Sidebar: React.FC<SidebarProps> = ({ position, isOpen, onClose }) => {
   const [openSubmenus, setOpenSubmenus] = useState<Map<string, boolean>>(
     new Map()
   );
+  const sidebarRef = useRef<HTMLDivElement>(null); // Reference to the sidebar DOM element
 
   // Fetch the menu data from the JSON file
   useEffect(() => {
@@ -117,32 +119,39 @@ const Sidebar: React.FC<SidebarProps> = ({ position, isOpen, onClose }) => {
 
           return (
             <li key={index}>
-              <a
-                href={submenu.link}
-                className={`submenu-item submenu-level-${level}`}
-                style={{ fontSize: `${fontSize}px` }} // Dynamically set font size
-                onClick={(e) => {
-                  e.preventDefault(); // Prevent page reload on link click
-                  toggleSubmenu(parentIndex, subIndex.toString()); // Toggle visibility of this submenu
-                }}
-              >
-                {submenu.name}
-                {submenu.submenus && submenu.submenus.length > 0 && (
+              {/* If submenu has a link, show link, else toggle */}
+              {submenu.submenus && submenu.submenus.length > 0 ? (
+                <a
+                  href="#"
+                  className={`submenu-item submenu-level-${level}`}
+                  style={{ fontSize: `${fontSize}px` }} // Dynamically set font size
+                  onClick={(e) => {
+                    e.preventDefault(); // Prevent page reload on link click
+                    toggleSubmenu(parentIndex, subIndex.toString()); // Toggle visibility of this submenu
+                  }}
+                >
+                  {submenu.name}
                   <img
                     src={RightArrow}
                     alt="Right Arrow"
                     className="submenu-arrow"
                   />
-                )}
-              </a>
-              {submenu.submenus &&
-                submenu.submenus.length > 0 &&
-                isOpen &&
-                renderSubmenus(
-                  submenu.submenus,
-                  level + 1,
-                  index
-                ) // Render child submenus
+                </a>
+              ) : (
+                <Link
+                  to={submenu.link} // Use Link for navigation if it doesn't have submenus
+                  className={`submenu-item submenu-level-${level}`}
+                  style={{ fontSize: `${fontSize}px` }}
+                >
+                  {submenu.name}
+                </Link>
+              )}
+
+              {
+                submenu.submenus &&
+                  submenu.submenus.length > 0 &&
+                  isOpen &&
+                  renderSubmenus(submenu.submenus, level + 1, index) // Render child submenus
               }
             </li>
           );
@@ -155,8 +164,17 @@ const Sidebar: React.FC<SidebarProps> = ({ position, isOpen, onClose }) => {
     position === "left" ? "left-sidebar" : "right-sidebar";
 
   return (
-    <div className={`sidebar ${sidebarPositionClass} ${isOpen ? "open" : ""}`}>
-      <button className="close-btn" onClick={onClose}>
+    <div
+      ref={sidebarRef}
+      className={`sidebar ${sidebarPositionClass} ${isOpen ? "open" : ""}`}
+    >
+      <button
+        className="close-btn"
+        onClick={(e) => {
+          e.stopPropagation(); // Prevent outside click handler
+          onClose(); // Close the sidebar when the button is clicked
+        }}
+      >
         &#10005;
       </button>
       <h2>{position === "left" ? "Left Sidebar" : "Right Sidebar"}</h2>
@@ -167,32 +185,39 @@ const Sidebar: React.FC<SidebarProps> = ({ position, isOpen, onClose }) => {
 
           return (
             <li key={index}>
-              <a
-                href={item.link}
-                className="menu-item"
-                style={{ fontSize: "14px" }} // Main menu items have font size of 14px
-                onClick={(e) => {
-                  e.preventDefault(); // Prevent page reload on link click
-                  toggleSubmenu("root", index.toString()); // Toggle visibility of top-level submenu
-                }}
-              >
-                {item.name}
-                {item.submenus && item.submenus.length > 0 && (
+              {/* If menu item has submenus, toggle the submenu, else navigate */}
+              {item.submenus && item.submenus.length > 0 ? (
+                <a
+                  href="#"
+                  className="menu-item"
+                  style={{ fontSize: "14px" }} // Main menu items have font size of 14px
+                  onClick={(e) => {
+                    e.preventDefault(); // Prevent page reload on link click
+                    toggleSubmenu("root", index.toString()); // Toggle visibility of top-level submenu
+                  }}
+                >
+                  {item.name}
                   <img
                     src={RightArrow}
                     alt="Right Arrow"
                     className="submenu-arrow"
                   />
-                )}
-              </a>
-              {item.submenus &&
-                item.submenus.length > 0 &&
-                isOpen &&
-                renderSubmenus(
-                  item.submenus,
-                  1,
-                  itemIndex
-                ) // Render submenus for this menu item
+                </a>
+              ) : (
+                <Link
+                  to={item.link} // Use Link for navigation if it doesn't have submenus
+                  className="menu-item"
+                  style={{ fontSize: "14px" }}
+                >
+                  {item.name}
+                </Link>
+              )}
+
+              {
+                item.submenus &&
+                  item.submenus.length > 0 &&
+                  isOpen &&
+                  renderSubmenus(item.submenus, 1, itemIndex) // Render submenus for this menu item
               }
             </li>
           );
