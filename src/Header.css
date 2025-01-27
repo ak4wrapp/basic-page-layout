@@ -20,12 +20,26 @@ header {
 }
 
 .user-avatar {
-  background-color: #888;
+  background-color: #e3ff4d;
   border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 10px;
   margin-right: 10px;
+  width: 16px;
+  height: 16px;
+  font-size: 20px;
+  color: black;
 }
 
 .user-name {
   font-size: 16px;
+}
+
+.submenu-arrow {
+  width: 24px;
+  height: 24px;
+  vertical-align: middle; /* Ensures the arrow aligns with the text */
+  transition: transform 0.3s ease;
 }

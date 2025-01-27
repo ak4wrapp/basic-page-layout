@@ -49,8 +49,8 @@
 
 /* Add a little space between the menu item text and the arrow */
 .submenu-arrow {
-  width: 12px;
-  height: 12px;
+  width: 16px;
+  height: 16px;
   margin-left: 5px;
   vertical-align: middle; /* Ensures the arrow aligns with the text */
   transition: transform 0.3s ease;
